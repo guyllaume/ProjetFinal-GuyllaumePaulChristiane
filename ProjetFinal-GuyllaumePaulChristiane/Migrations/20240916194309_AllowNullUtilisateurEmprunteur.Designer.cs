@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetFinal_GuyllaumePaulChristiane.Data;
 
@@ -11,9 +12,11 @@ using ProjetFinal_GuyllaumePaulChristiane.Data;
 namespace ProjetFinal_GuyllaumePaulChristiane.Migrations
 {
     [DbContext(typeof(ProjetFinal_GPC_DBContext))]
-    partial class ProjetFinal_GPC_DBContextModelSnapshot : ModelSnapshot
+    [Migration("20240916194309_AllowNullUtilisateurEmprunteur")]
+    partial class AllowNullUtilisateurEmprunteur
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,15 +239,18 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Categorie")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DerniereMiseAJour")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DerniereMiseAJourPar")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionSupplements")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Duree")
@@ -254,43 +260,54 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Format")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImagePochette")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Langue")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomProducteur")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomRealisateur")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("NombreDisques")
                         .HasColumnType("int");
 
                     b.Property<string>("NomsActeursPrincipaux")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ResumeFilm")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SousTitres")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TitreFrancais")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TitreOriginal")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UtilisateurEmprunteur")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UtilisateurProprietaire")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("VersionEtendue")
@@ -300,9 +317,6 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TitreFrancais")
-                        .IsUnique();
 
                     b.ToTable("DVDs");
                 });

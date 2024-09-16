@@ -15,6 +15,13 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Data
             : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);//apporter une modification spécifique
+            modelBuilder.Entity<DVD>()
+                .HasIndex(dvd => dvd.TitreFrancais).IsUnique();
+        }
+        public DbSet<DVD> DVDs { get; set; }
 
     }
 }

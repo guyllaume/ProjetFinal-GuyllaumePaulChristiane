@@ -1,0 +1,169 @@
+﻿@model IEnumerable<ProjetFinal_GuyllaumePaulChristiane.Models.DVD>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Créer un DVD</a>
+    <a asp-action="Import" class="btn btn-secondary">Importation d'exemple de DVDs</a>
+</p>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TitreFrancais)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TitreOriginal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AnneeSortie)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categorie)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DerniereMiseAJour)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DerniereMiseAJourPar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DescriptionSupplements)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duree)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstOriginal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Format)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePochette)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Langue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreDisques)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NomProducteur)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NomRealisateur)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NomsActeursPrincipaux)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResumeFilm)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SousTitres)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UtilisateurProprietaire)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UtilisateurEmprunteur)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VersionEtendue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VisibleATous)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TitreFrancais)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TitreOriginal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnneeSortie)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categorie)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DerniereMiseAJour)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DerniereMiseAJourPar)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DescriptionSupplements)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duree)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstOriginal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Format)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagePochette)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Langue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreDisques)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomProducteur)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomRealisateur)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomsActeursPrincipaux)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResumeFilm)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SousTitres)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UtilisateurProprietaire)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UtilisateurEmprunteur)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VersionEtendue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VisibleATous)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
