@@ -1,0 +1,49 @@
+﻿@model ProjetFinal_GuyllaumePaulChristiane.Models.DVD
+
+@{
+    ViewData["Title"] = "Détails du DVD";
+}
+
+<h1>Détails du DVD</h1>
+
+<div>
+    <h4>@Model.TitreFrancais</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TitreFrancais)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.TitreFrancais)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TitreOriginal)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.TitreOriginal)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.AnneeSortie)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.AnneeSortie)</dd>
+
+        <!-- Ajoutez ici les autres propriétés comme dans votre vue originale -->
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.UtilisateurEmprunteur)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.UtilisateurEmprunteur)</dd>
+    </dl>
+</div>
+
+@if (Model.UtilisateurEmprunteur != User.Identity.Name)
+{
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <form asp-action="Appropriation" asp-route-id="@Model.Id" method="post">
+                <button type="submit" class="btn btn-primary">S'approprier le DVD</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <a href="mailto:@Model.UtilisateurEmprunteur" class="btn btn-secondary">Envoyer un email à l'emprunteur</a>
+        </div>
+    </div>
+}
+
+<div class="mt-3">
+    @if (Model.UtilisateurEmprunteur == User.Identity.Name)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Modifier</a>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+</div>

@@ -7,7 +7,7 @@ using ProjetFinal_GuyllaumePaulChristiane.Tasks;
 var builder = WebApplication.CreateBuilder(args);
 
 // Enregistrer l'implémentation de IEmailSender
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 builder.Services.AddDbContext<ProjetFinal_GPC_DBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ProjetFinal_GPC_DBContext") ?? throw new InvalidOperationException("Connection string 'ProjetFinal_GPC_DBContext' not found.")));
