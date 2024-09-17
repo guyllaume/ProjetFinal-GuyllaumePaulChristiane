@@ -12,14 +12,13 @@ using ProjetFinal_GuyllaumePaulChristiane.Data;
 using ProjetFinal_GuyllaumePaulChristiane.Models;
 using CsvHelper;
 using System.Text;
-using ProjetFinal_GuyllaumePaulChristiane.Enums;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Drawing.Printing;
-using ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs;
+using ProjetFinal_GuyllaumePaulChristiane.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
