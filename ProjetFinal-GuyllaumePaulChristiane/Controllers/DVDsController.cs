@@ -12,9 +12,14 @@ using ProjetFinal_GuyllaumePaulChristiane.Data;
 using ProjetFinal_GuyllaumePaulChristiane.Models;
 using CsvHelper;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Drawing.Printing;
 using ProjetFinal_GuyllaumePaulChristiane.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
 {
@@ -22,6 +27,8 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
     public class DVDsController : Controller
     {
         private readonly ProjetFinal_GPC_DBContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+
 
         public DVDsController(ProjetFinal_GPC_DBContext context)
         {
@@ -44,10 +51,48 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 });
         }
         // GET: DVDs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string[] sortedBy, int? pageNoParam)
         {
-            var dvds = await _context.DVDs.ToListAsync();
-            return View(dvds);
+            //Initial values
+            int pageNo = pageNoParam ?? 1;
+            int moviesPerPages = 12; //Needs to be selected with Personalisation
+
+            //Collection en Query for dynamic sorting
+            var query = _context.DVDs.AsQueryable();
+
+            if (sortedBy != null && sortedBy.Any())
+            {
+                // Apply dynamic sorting
+                bool isFirstSort = true;
+                foreach (string sortOption in sortedBy) //for each sorting options selected, add it the OrderBy Clause
+                {
+                    switch (sortOption)
+                    {
+                        case "Titre":
+                            query = isFirstSort ? query.OrderBy(d => d.TitreFrancais) : ((IOrderedQueryable<DVD>)query).ThenBy(d => d.TitreFrancais); //either normal OrderBy or add it to already existing order by
+                            break;
+                        case "User":
+                            query = isFirstSort ? query.OrderBy(d => d.UtilisateurEmprunteur) : ((IOrderedQueryable<DVD>)query).ThenBy(d => d.UtilisateurEmprunteur);
+                            break;
+                    }
+                    isFirstSort = false;
+                }
+            }
+            else //if no option selected or first time on page, orderby titre
+            {
+                query = query.OrderBy(d => d.TitreFrancais);
+            }
+
+            // Store the selected sort options in ViewData
+            ViewData["SelectedSortOptions"] = sortedBy ?? [];
+
+            //LINQ query 
+            var pagedResults = await query
+                .Skip((pageNo - 1) * moviesPerPages) //OFFSET
+                .Take(moviesPerPages) //LIMIT
+                .ToListAsync();
+
+            return View(pagedResults);
         }
 
         // GET: DVDs/Details/5
