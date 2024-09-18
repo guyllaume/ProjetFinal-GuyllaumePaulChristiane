@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjetFinal_GuyllaumePaulChristiane.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Models
@@ -10,7 +11,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Models
         [Required(ErrorMessage = "Le titre français est requis")]
         [Display(Name = "Titre français")]
         
-        public string TitreFrancais { get; set; }
+        public string? TitreFrancais { get; set; }
 
         [Display(Name = "Titre original")]
         public string? TitreOriginal { get; set; }
@@ -19,8 +20,14 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Models
         [Range(1900, 2100, ErrorMessage = "L'année doit être entre 1900 et 2100")]
         public int? AnneeSortie { get; set; }
 
+        
         [Display(Name = "Catégorie")]
-        public string? Categorie { get; set; }
+        public String? Categorie { get; set; }
+        /*
+        
+        [Display(Name = "Catégorie")]
+        public Categorie? Categorie { get; set; }
+        */ 
 
         [Display(Name = "Dernière mise à jour effectuée le")]
         public DateTime? DerniereMiseAJour { get; set; }
@@ -77,5 +84,6 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Models
 
         [Display(Name = "Visible à tous")]
         public bool VisibleATous { get; set; }
+
     }
 }

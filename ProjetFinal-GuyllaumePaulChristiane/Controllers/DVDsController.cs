@@ -12,6 +12,9 @@ using ProjetFinal_GuyllaumePaulChristiane.Data;
 using ProjetFinal_GuyllaumePaulChristiane.Models;
 using CsvHelper;
 using System.Text;
+using ProjetFinal_GuyllaumePaulChristiane.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -33,6 +36,21 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             _userManager = userManager;
         }
 
+        // Méthode helper pour obtenir la liste des catégories
+        private static IEnumerable<SelectListItem> GetCategoriesList()
+        {
+            return Enum.GetValues(typeof(Categorie))
+                .Cast<Categorie>()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.ToString(),
+                    Text = c.GetType()
+                            .GetMember(c.ToString())
+                            .First()
+                            .GetCustomAttribute<DisplayAttribute>()
+                            ?.GetName() ?? c.ToString()
+                });
+        }
         // GET: DVDs
         public async Task<IActionResult> Index(string[] sortedBy, int? pageNoParam)
         {
@@ -206,12 +224,11 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
         // GET: DVDs/Create
         public IActionResult Create()
         {
+            ViewBag.Categories = GetCategoriesList();
             return View();
         }
 
         // POST: DVDs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TitreFrancais,TitreOriginal,AnneeSortie,Categorie,DerniereMiseAJour,DerniereMiseAJourPar,DescriptionSupplements,Duree,EstOriginal,Format,ImagePochette,Langue,NombreDisques,NomProducteur,NomRealisateur,NomsActeursPrincipaux,ResumeFilm,SousTitres,UtilisateurProprietaire,UtilisateurEmprunteur,VersionEtendue,VisibleATous")] DVD dVD)
@@ -224,6 +241,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Categories = GetCategoriesList();
             return View(dVD);
         }
 
@@ -240,6 +258,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Categories = GetCategoriesList();
             return View(dVD);
         }
 
@@ -277,6 +296,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Categories = GetCategoriesList();
             return View(dVD);
         }
 
@@ -377,5 +397,29 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 return View("Import");
             }
         }
+
+        // méthode pour l'appropriation d'un DVD
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Appropriation(int id)
+        {
+            var dvd = await _context.DVDs.FindAsync(id);
+            if (dvd == null)
+            {
+                return NotFound();
+            }
+
+            dvd.UtilisateurEmprunteur = User.Identity.Name;
+            dvd.DerniereMiseAJour = DateTime.Now;
+            dvd.DerniereMiseAJourPar = User.Identity.Name;
+
+            _context.Update(dvd);
+            await _context.SaveChangesAsync();
+
+            // logique pour envoyer un email
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
