@@ -1,0 +1,62 @@
+﻿@model ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs.SelectedUserViewModel
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>DVD de @Model.UserName</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Créer un DVD</a>
+    <a asp-action="Import" class="btn btn-secondary">Importation d'exemple de DVDs</a>
+</p>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<form asp-action="IndexConnectedUser" asp-controller="DVDs" method="get">
+    <label for="pageNoParam">Page</label>
+    <select name="pageNoParam" onchange="this.form.submit()">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <option value="@i" selected="@(i == Model.currentPage)">@i</option>
+        }
+    </select>
+    <input type="hidden" asp-for="SelectedUserId" value="@Model.SelectedUserId"/>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DVDs.First().ImagePochette)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DVDs.First().TitreFrancais)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.DVDs) {
+    <tr>
+        <td>
+            <img src="@Url.Content(item.ImagePochette)" alt="Image Pochette" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TitreFrancais)
+        </td>
+        <td>
+            <a asp-action="Details" asp-route-id="@item.Id">Détails</a> 
+            <a asp-action="Contact" asp-route-id="@item.Id">Contacter</a> 
+            <a asp-action="Appropriation" asp-route-id="@item.Id">Appropriation</a>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>

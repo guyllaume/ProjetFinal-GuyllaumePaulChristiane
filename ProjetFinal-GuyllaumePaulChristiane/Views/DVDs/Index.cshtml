@@ -1,7 +1,7 @@
-﻿@using ProjetFinal_GuyllaumePaulChristiane.Utilities
+﻿@model ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs.DVDViewModel
+@using ProjetFinal_GuyllaumePaulChristiane.Utilities
 @using ProjetFinal_GuyllaumePaulChristiane.Enums
 
-@model IEnumerable<ProjetFinal_GuyllaumePaulChristiane.Models.DVD>
 @using Microsoft.AspNetCore.Identity
 
 @inject UserManager<IdentityUser> UserManager
@@ -38,24 +38,34 @@
     <label>
         <input type="checkbox" name="sortedBy" value="User" onchange="this.form.submit()" @(IsChecked("User") ? "checked" : "") /> Tri par Emprunteur
     </label>
+    <input type="text" name="recherche"/>
+    <img src="../Data/Image/loupe.png" onclick="this.form.submit()"/>
+    <label for="pageNoParam">Page</label>
+    <select name="pageNoParam" onchange="this.form.submit()">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <option value="@i" selected="@(i == Model.currentPage)">@i</option>
+        }
+    </select>
 </form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TitreFrancais)
+                @Html.DisplayNameFor(model => model.DVDs.First().ImagePochette)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ImagePochette)
+                @Html.DisplayNameFor(model => model.DVDs.First().TitreFrancais)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UtilisateurEmprunteur)
+                @Html.DisplayNameFor(model => model.DVDs.First().UtilisateurEmprunteur)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.DVDs) {
+    if(item.VisibleATous || item.UtilisateurEmprunteur == User.Identity.Name)
+    {
     <tr>
         <td>
             <img src="@Url.Content(item.ImagePochette)" alt="Image Pochette" />
@@ -78,6 +88,7 @@
             }
         </td>
     </tr>
+    }
 }
     </tbody>
 </table>
