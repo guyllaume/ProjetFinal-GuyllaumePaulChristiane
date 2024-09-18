@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Drawing.Printing;
+using ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs;
 
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
@@ -26,10 +27,10 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
         private readonly ProjetFinal_GPC_DBContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
-
-        public DVDsController(ProjetFinal_GPC_DBContext context)
+        public DVDsController(ProjetFinal_GPC_DBContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: DVDs
@@ -41,6 +42,8 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
 
             //Collection en Query for dynamic sorting
             var query = _context.DVDs.AsQueryable();
+
+            query = query.Where(d => d.VisibleATous || d.UtilisateurEmprunteur == User.Identity.Name);
 
             if (sortedBy != null && sortedBy.Any())
             {
@@ -69,12 +72,117 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             ViewData["SelectedSortOptions"] = sortedBy ?? [];
 
             //LINQ query 
+            var totalResults = await query.ToListAsync();
+            var pagedResults = await query
+                .Skip((pageNo - 1) * moviesPerPages) //OFFSET
+                .Take(moviesPerPages) //LIMIT
+                .ToListAsync();
+            var totalPages = (int)Math.Ceiling(totalResults.Count() / (double)moviesPerPages);
+            if (totalPages == 0) totalPages = 1;
+
+            var viewModel = new DVDViewModel { DVDs = pagedResults, TotalPages = totalPages, currentPage = pageNo };
+
+
+            return View(viewModel);
+        }
+        // GET: DVDs/IndexConnectedUser
+        public async Task<IActionResult> IndexConnectedUser(int? pageNoParam)
+        {
+            //Initial values
+            int pageNo = pageNoParam ?? 1;
+            int moviesPerPages = 12; //Needs to be selected with Personalisation
+
+            //Collection en Query for dynamic sorting
+            var query = _context.DVDs.AsQueryable();
+
+            //Add userConnected restriction !!!
+            query = query.Where(d => User.Identity.Name == d.UtilisateurEmprunteur);
+
+            //OrderBy default
+            query = query.OrderBy(d => d.TitreFrancais);
+
+            //LINQ query 
+            var totalResults = await query.ToListAsync();
+
             var pagedResults = await query
                 .Skip((pageNo - 1) * moviesPerPages) //OFFSET
                 .Take(moviesPerPages) //LIMIT
                 .ToListAsync();
 
-            return View(pagedResults);
+            var totalPages = (int)Math.Ceiling(totalResults.Count() / (double)moviesPerPages);
+            if (totalPages == 0) totalPages = 1;
+            var viewModel = new DVDViewModel { DVDs = pagedResults, TotalPages = totalPages, currentPage = pageNo };
+
+            return View(viewModel);
+        }
+        // GET: DVDs/IndexSelectedUser
+        public async Task<IActionResult> IndexSelectedUser(string userId, int? pageNoParam)
+        {
+            //Initial values
+            int pageNo = pageNoParam ?? 1;
+            int moviesPerPages = 12; //Needs to be selected with Personalisation
+
+            //Collection en Query for dynamic sorting
+            var query = _context.DVDs.AsQueryable();
+
+            //Add userConnected
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(); 
+            }
+            query = query.Where(d => user.UserName == d.UtilisateurEmprunteur && d.VisibleATous);
+
+            //OrderBy default
+            query = query.OrderBy(d => d.TitreFrancais);
+
+            //LINQ query 
+            var totalResults = await query.ToListAsync();
+
+            var pagedResults = await query
+                .Skip((pageNo - 1) * moviesPerPages) //OFFSET
+                .Take(moviesPerPages) //LIMIT
+                .ToListAsync();
+
+            var totalPages = (int)Math.Ceiling(totalResults.Count() / (double)moviesPerPages);
+            if (totalPages == 0) totalPages = 1;
+            var viewModel = new SelectedUserViewModel { DVDs = pagedResults, TotalPages = totalPages, currentPage = pageNo, SelectedUserId = userId, UserName = user.UserName};
+
+            return View(viewModel);
+        }
+        // GET: DVDs/IndexSelectUser
+        public async Task<IActionResult> IndexSelectUser()
+        {
+            // Retrieve all users except connected user
+            var users = await _userManager.Users
+                .Where(u => u.UserName != User.Identity.Name)
+                .ToListAsync();
+
+            // Prepare the ViewModel
+            var model = new SelectUserViewModel
+            {
+                Users = users.Select(u => new SelectListItem
+                {
+                    Value = u.Id, // User's ID
+                    Text = u.UserName // User's username or email
+                }).ToList()
+            };
+
+            return View(model);
+        }
+        // POST: DVDs/IndexSelectUser
+        [HttpPost]
+        public IActionResult ProcessSelectedUser(SelectUserViewModel model)
+        {
+            if (model.SelectedUserId != null)
+            {
+                var selectedUserId = model.SelectedUserId;
+
+                return RedirectToAction("IndexSelectedUser", new { userId = selectedUserId });
+            }
+
+            // If the model is invalid, return to the form
+            return View("IndexSelectUser", model);
         }
 
         // GET: DVDs/Details/5

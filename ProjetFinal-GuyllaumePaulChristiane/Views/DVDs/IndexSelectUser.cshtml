@@ -1,0 +1,12 @@
+﻿@model ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs.SelectUserViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<form asp-action="ProcessSelectedUser" asp-controller="DVDs" method="post">
+    <label for="userSelect">Choisissez un utilisateur</label>
+    <select id="userSelect" asp-for="SelectedUserId" class="form-control" asp-items="Model.Users">
+        <option value="">-- Select a User --</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
