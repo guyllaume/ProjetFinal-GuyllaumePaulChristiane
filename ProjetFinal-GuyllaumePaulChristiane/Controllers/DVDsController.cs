@@ -19,6 +19,9 @@ using Microsoft.AspNetCore.Identity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Drawing.Printing;
+using ProjetFinal_GuyllaumePaulChristiane.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs;
 
 
