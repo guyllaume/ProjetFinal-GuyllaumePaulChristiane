@@ -19,6 +19,7 @@ using System.Drawing.Printing;
 using ProjetFinal_GuyllaumePaulChristiane.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs;
 
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
