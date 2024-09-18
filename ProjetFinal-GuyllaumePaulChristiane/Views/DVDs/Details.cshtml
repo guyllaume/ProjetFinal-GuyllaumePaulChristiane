@@ -1,11 +1,8 @@
 ﻿@model ProjetFinal_GuyllaumePaulChristiane.Models.DVD
-
 @{
     ViewData["Title"] = "Détails du DVD";
 }
-
 <h1>Détails du DVD</h1>
-
 <div>
     <h4>@Model.TitreFrancais</h4>
     <hr />
@@ -19,10 +16,67 @@
         <dt class="col-sm-3">@Html.DisplayNameFor(model => model.AnneeSortie)</dt>
         <dd class="col-sm-9">@Html.DisplayFor(model => model.AnneeSortie)</dd>
 
-        <!-- Ajoutez ici les autres propriétés comme dans votre vue originale -->
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Categorie)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Categorie)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DerniereMiseAJour)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.DerniereMiseAJour)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DerniereMiseAJourPar)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.DerniereMiseAJourPar)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DescriptionSupplements)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.DescriptionSupplements)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Duree)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Duree) minutes</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.EstOriginal)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.EstOriginal)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Format)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Format)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.ImagePochette)</dt>
+        <dd class="col-sm-9">
+            @if (!string.IsNullOrEmpty(Model.ImagePochette))
+            {
+                <img src="@Model.ImagePochette" alt="Pochette du DVD" style="max-width: 200px;" />
+            }
+        </dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Langue)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Langue)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NombreDisques)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreDisques)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NomProducteur)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NomProducteur)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NomRealisateur)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NomRealisateur)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NomsActeursPrincipaux)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NomsActeursPrincipaux)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.ResumeFilm)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.ResumeFilm)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.SousTitres)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.SousTitres)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.UtilisateurProprietaire)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.UtilisateurProprietaire)</dd>
 
         <dt class="col-sm-3">@Html.DisplayNameFor(model => model.UtilisateurEmprunteur)</dt>
         <dd class="col-sm-9">@Html.DisplayFor(model => model.UtilisateurEmprunteur)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VersionEtendue)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.VersionEtendue)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VisibleATous)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.VisibleATous)</dd>
     </dl>
 </div>
 

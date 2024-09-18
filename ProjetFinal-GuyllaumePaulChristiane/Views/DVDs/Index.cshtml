@@ -1,10 +1,13 @@
-﻿@model IEnumerable<ProjetFinal_GuyllaumePaulChristiane.Models.DVD>
+﻿@using ProjetFinal_GuyllaumePaulChristiane.Utilities
+@using ProjetFinal_GuyllaumePaulChristiane.Enums
+
+@model IEnumerable<ProjetFinal_GuyllaumePaulChristiane.Models.DVD>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Affichage des données détaillées d’un DVD</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Créer un DVD</a>
@@ -102,7 +105,8 @@
                 @Html.DisplayFor(modelItem => item.AnneeSortie)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Categorie)
+                    @Html.DisplayFor(modelItem => item.Categorie)
+
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DerniereMiseAJour)
