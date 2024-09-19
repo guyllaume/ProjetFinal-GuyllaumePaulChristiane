@@ -409,6 +409,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 return NotFound();
             }
 
+            dvd.UtilisateurProprietaire = User.Identity.Name;
             dvd.UtilisateurEmprunteur = User.Identity.Name;
             dvd.DerniereMiseAJour = DateTime.Now;
             dvd.DerniereMiseAJourPar = User.Identity.Name;
