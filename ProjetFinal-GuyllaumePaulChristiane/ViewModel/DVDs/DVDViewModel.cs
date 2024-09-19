@@ -6,6 +6,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs
     {
         public int TotalPages { get; set; }
         public int currentPage { get; set; }
+        public bool isResearched { get; set; }
         public IEnumerable<DVD> DVDs { get; set; }
     }
 }

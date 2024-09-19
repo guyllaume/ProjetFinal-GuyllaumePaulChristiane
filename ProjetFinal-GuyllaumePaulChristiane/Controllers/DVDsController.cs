@@ -52,7 +52,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 });
         }
         // GET: DVDs
-        public async Task<IActionResult> Index(string[] sortedBy, int? pageNoParam)
+        public async Task<IActionResult> Index(string[] sortedBy,string recherche, int? pageNoParam)
         {
             //Initial values
             int pageNo = pageNoParam ?? 1;
@@ -60,6 +60,12 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
 
             //Collection en Query for dynamic sorting
             var query = _context.DVDs.AsQueryable();
+
+            // Filter by search term (e.g., searching by DVD title or other fields)
+            if (!string.IsNullOrWhiteSpace(recherche))
+            {
+                query = query.Where(d => d.TitreFrancais.Contains(recherche) || d.TitreOriginal.Contains(recherche)); // Adjust this to search on different fields if necessary
+            }
 
             query = query.Where(d => d.VisibleATous || d.UtilisateurEmprunteur == User.Identity.Name);
 
@@ -98,7 +104,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             var totalPages = (int)Math.Ceiling(totalResults.Count() / (double)moviesPerPages);
             if (totalPages == 0) totalPages = 1;
 
-            var viewModel = new DVDViewModel { DVDs = pagedResults, TotalPages = totalPages, currentPage = pageNo };
+            var viewModel = new DVDViewModel { DVDs = pagedResults, TotalPages = totalPages, currentPage = pageNo, isResearched = !string.IsNullOrWhiteSpace(recherche) };
 
 
             return View(viewModel);
