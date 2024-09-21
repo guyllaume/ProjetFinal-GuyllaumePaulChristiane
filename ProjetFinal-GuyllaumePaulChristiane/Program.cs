@@ -4,16 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProjetFinal_GuyllaumePaulChristiane.Data;
 using ProjetFinal_GuyllaumePaulChristiane.Tasks;
+using ProjetFinal_GuyllaumePaulChristiane.Models;
 var builder = WebApplication.CreateBuilder(args);
 
-// Enregistrer l'implémentation de IEmailSender
+// Enregistrer l'implï¿½mentation de IEmailSender
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 builder.Services.AddDbContext<ProjetFinal_GPC_DBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ProjetFinal_GPC_DBContext") ?? throw new InvalidOperationException("Connection string 'ProjetFinal_GPC_DBContext' not found.")));
 
-// Configure Identity with default IdentityUser
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+// Configure Identity with default User inherits IdentityUser
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ProjetFinal_GPC_DBContext>()
     .AddDefaultTokenProviders();
 

@@ -1,0 +1,34 @@
+﻿@page
+@model NotificationsModel
+@{
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <form id="affichage-form" method="post">
+            <div class="form-check">
+                <input asp-for="Input.courrielOnDVDCreate" class="form-check-input" type="checkbox" id="option1" />
+                <label class="form-check-label" asp-for="Input.courrielOnDVDCreate">Recevoir un courriel quand un DVD est créé?</label>
+                <span asp-validation-for="Input.courrielOnDVDCreate" class="text-danger"></span>
+            </div>
+            <div class="form-check">
+                <input asp-for="Input.courrielOnDVDDelete" class="form-check-input" type="checkbox" id="option2" />
+                <label class="form-check-label" asp-for="Input.courrielOnDVDDelete">Recevoir un courriel quand un DVD est supprimé?</label>
+                <span asp-validation-for="Input.courrielOnDVDDelete" class="text-danger"></span>
+            </div>
+            <div class="form-check">
+                <input asp-for="Input.courrielOnAppropriation" class="form-check-input" type="checkbox" id="option3" />
+                <label class="form-check-label" asp-for="Input.courrielOnAppropriation">Recevoir un courriel quand un DVD est approprié?</label>
+                <span asp-validation-for="Input.courrielOnAppropriation" class="text-danger"></span>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Update Notifications Settings</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

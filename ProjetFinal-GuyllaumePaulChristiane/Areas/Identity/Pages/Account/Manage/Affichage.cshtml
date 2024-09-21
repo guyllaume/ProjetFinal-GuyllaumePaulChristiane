@@ -1,0 +1,24 @@
+﻿@page
+@model AffichageModel
+@{
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <form id="affichage-form" method="post">
+            <div class="form-floating mb-3">
+                <input asp-for="Input.nbDVDParPage" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.nbDVDParPage" class="form-label">Nombre de DVD par page</label>
+                <span asp-validation-for="Input.nbDVDParPage" class="text-danger"></span>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Update Affichage Settings</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

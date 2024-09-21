@@ -28,9 +28,9 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
     public class DVDsController : Controller
     {
         private readonly ProjetFinal_GPC_DBContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public DVDsController(ProjetFinal_GPC_DBContext context, UserManager<IdentityUser> userManager)
+        public DVDsController(ProjetFinal_GPC_DBContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;
