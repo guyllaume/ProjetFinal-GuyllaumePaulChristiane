@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetFinal_GuyllaumePaulChristiane.Data;
 
@@ -11,9 +12,11 @@ using ProjetFinal_GuyllaumePaulChristiane.Data;
 namespace ProjetFinal_GuyllaumePaulChristiane.Migrations
 {
     [DbContext(typeof(ProjetFinal_GPC_DBContext))]
-    partial class ProjetFinal_GPC_DBContextModelSnapshot : ModelSnapshot
+    [Migration("20240920222618_FixCategorieToString")]
+    partial class FixCategorieToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,9 +241,6 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Migrations
                     b.Property<string>("Categorie")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CheminImage")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("DerniereMiseAJour")
                         .HasColumnType("datetime2");
 
@@ -257,6 +257,9 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Format")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePochette")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Langue")

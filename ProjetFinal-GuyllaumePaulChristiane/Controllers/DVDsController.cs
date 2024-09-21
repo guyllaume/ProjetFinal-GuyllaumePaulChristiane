@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,7 @@ using ProjetFinal_GuyllaumePaulChristiane.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs;
+using ProjetFinal_GuyllaumePaulChristiane.Utilities;
 
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
@@ -224,24 +226,74 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
         // GET: DVDs/Create
         public IActionResult Create()
         {
+            var proprietaire = _userManager.GetUserAsync(User).Result;
+            ViewBag.UserName = proprietaire?.UserName;
+
             ViewBag.Categories = GetCategoriesList();
+            
+            ViewBag.Formats = new SelectList(new List<string> { "Normal", "Panoramique", "Blu-Ray" });
+
+            ViewBag.Langues = new SelectList(new List<string> { "anglais", "français", "espagnol" });
+
+            ViewBag.STitres = new SelectList(new List<string> { "anglais", "français", "espagnol" });
+
             return View();
         }
 
         // POST: DVDs/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TitreFrancais,TitreOriginal,AnneeSortie,Categorie,DerniereMiseAJour,DerniereMiseAJourPar,DescriptionSupplements,Duree,EstOriginal,Format,ImagePochette,Langue,NombreDisques,NomProducteur,NomRealisateur,NomsActeursPrincipaux,ResumeFilm,SousTitres,UtilisateurProprietaire,UtilisateurEmprunteur,VersionEtendue,VisibleATous")] DVD dVD)
+        public async Task<IActionResult> Create([Bind("Id,TitreFrancais,TitreOriginal,AnneeSortie,Categorie,DerniereMiseAJour,DerniereMiseAJourPar,DescriptionSupplements,Duree,EstOriginal,Format,ImagePochette,Langue,NombreDisques,NomProducteur,NomRealisateur,NomsActeursPrincipaux,ResumeFilm,SousTitres,UtilisateurProprietaire,UtilisateurEmprunteur,VersionEtendue,VisibleATous")] DVD dVD, IFormFile imagePochette)
         {
             if (ModelState.IsValid)
             {
+                //vérifier si le titre existe déjà
+                var dvdExistant = await _context.DVDs.FirstOrDefaultAsync(d => d.TitreFrancais == dVD.TitreFrancais);
+                if(dvdExistant !=null)
+                {
+                    ModelState.AddModelError(dVD.TitreFrancais, "Le titre existe déjà.");
+                    return View();
+                }
+
+                
+                    
+                    if (imagePochette != null && imagePochette.Length > 0)
+                    {
+                       
+                        var image = imagePochette;
+                        var extension = Path.GetExtension(image.FileName);
+                        var uniqueFileName = Guid.NewGuid().ToString() + "-" + dVD.TitreFrancais + extension;
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ImagePochette");
+
+                        if (!Directory.Exists(uploadsFolder))
+                        {
+                            Directory.CreateDirectory(uploadsFolder);
+                        }
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await image.CopyToAsync(fileStream);
+                        }
+                        dVD.ImagePochette = Path.Combine("/wwwroot/ImagePochette", uniqueFileName);
+                       
+                    }
+                  
+
                 dVD.DerniereMiseAJour = DateTime.Now;
                 dVD.DerniereMiseAJourPar = User.Identity.Name;
                 _context.Add(dVD);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            var proprietaire = _userManager.GetUserAsync(User).Result;
+            ViewBag.UserName = proprietaire?.UserName;
+
             ViewBag.Categories = GetCategoriesList();
+            ViewBag.Formats = new SelectList(new List<string> { "Normal", "Panoramique", "Blu-Ray" });
+            ViewBag.Langues = new SelectList(new List<string> { "anglais", "français", "espagnol" });
+            ViewBag.STitres = new SelectList(new List<string> { "anglais", "français", "espagnol" });
             return View(dVD);
         }
 

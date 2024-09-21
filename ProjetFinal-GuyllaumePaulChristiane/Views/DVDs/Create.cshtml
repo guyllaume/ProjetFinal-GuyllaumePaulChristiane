@@ -4,13 +4,13 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h2>Create DVD</h2>
 
-<h4>DVD</h4>
+@*<h4>DVD</h4>*@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="TitreFrancais" class="control-label"></label>
@@ -61,18 +61,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="Format" class="control-label"></label>
-                <input asp-for="Format" class="form-control" />
+                <select asp-for="Format" asp-items="ViewBag.Formats" class="form-control">
+                    <option value="">Sélectionnez un format</option>
+                </select>
                 <span asp-validation-for="Format" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImagePochette" class="control-label"></label>
-                <input asp-for="ImagePochette" class="form-control" />
-                <span asp-validation-for="ImagePochette" class="text-danger"></span>
+                <label name="imagePochette" class="control-label"></label>
+                <input name = "imagePochette" type="file" class="form-control" />
+                <span class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Langue" class="control-label"></label>
-                <input asp-for="Langue" class="form-control" />
-                <span asp-validation-for="Langue" class="text-danger"></span>
+                <select asp-for="Langue" asp-items="ViewBag.Langues" class="form-control">
+                    <option value="">Sélectionnez une langue</option>
+                </select>
+                <span asp-validation-for="Format" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NombreDisques" class="control-label"></label>
@@ -101,13 +105,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="SousTitres" class="control-label"></label>
-                <input asp-for="SousTitres" class="form-control" />
-                <span asp-validation-for="SousTitres" class="text-danger"></span>
+                <select asp-for="SousTitres" asp-items="ViewBag.STitres" class="form-control">
+                    <option value="">Sélectionnez un sous-titre</option>
+                </select>
+                <span asp-validation-for="Format" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="UtilisateurProprietaire" class="control-label"></label>
-                <input asp-for="UtilisateurProprietaire" class="form-control" />
-                <span asp-validation-for="UtilisateurProprietaire" class="text-danger"></span>
+                <span class="text-info">@ViewBag.UserName</span>
             </div>
             <div class="form-group">
                 <label asp-for="UtilisateurEmprunteur" class="control-label"></label>

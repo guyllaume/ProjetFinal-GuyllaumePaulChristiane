@@ -1,6 +1,7 @@
 ﻿using ProjetFinal_GuyllaumePaulChristiane.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Models
 {
@@ -22,7 +23,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Models
 
         
         [Display(Name = "Catégorie")]
-        public String? Categorie { get; set; }
+        public string? Categorie { get; set; }
         /*
         
         [Display(Name = "Catégorie")]
@@ -48,8 +49,12 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Models
         [Display(Name = "Format")]
         public string? Format { get; set; }
 
+        //[Display(Name = "chemin de l'image de la pochette")]
+       // public string? CheminImage { get; set; } // chemin de l'image de la pochette de type string
+
+        [NotMapped]
         [Display(Name = "Image de la pochette")]
-        public string? ImagePochette { get; set; }
+        public string? ImagePochette { get; set; } // Image de la pochette de type IFomFile
 
         [Display(Name = "Langue")]
         public string? Langue { get; set; }
