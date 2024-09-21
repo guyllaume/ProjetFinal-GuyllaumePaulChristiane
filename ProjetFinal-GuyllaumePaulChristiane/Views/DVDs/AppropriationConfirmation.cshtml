@@ -1,8 +1,12 @@
 ﻿@model ProjetFinal_GuyllaumePaulChristiane.Models.DVD
+
 @{
-    ViewData["Title"] = "Détails du DVD";
+    ViewData["Title"] = "Confirmer l'appropriation";
 }
-<h1>Détails du DVD</h1>
+
+<h1>Confirmer l'appropriation</h1>
+
+<h3>Êtes-vous sûr de vouloir vous approprier ce DVD ?</h3>
 <div>
     <h4>@Model.TitreFrancais</h4>
     <hr />
@@ -78,24 +82,10 @@
         <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VisibleATous)</dt>
         <dd class="col-sm-9">@Html.DisplayFor(model => model.VisibleATous)</dd>
     </dl>
-</div>
 
-@if (Model.UtilisateurEmprunteur != User.Identity.Name)
-{
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <a asp-action="AppropriationConfirmation" asp-route-id="@Model.Id" class="btn btn-primary">S'approprier le DVD</a>
-        </div>
-        <div class="col-md-4">
-            <a href="mailto:@Model.UtilisateurEmprunteur" class="btn btn-secondary">Envoyer un email à l'emprunteur</a>
-        </div>
-    </div>
-}
-
-<div class="mt-3">
-    @if (Model.UtilisateurEmprunteur == User.Identity.Name)
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Modifier</a>
-    }
-    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+    <form asp-action="Appropriation">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Confirmer l'appropriation" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+    </form>
 </div>
