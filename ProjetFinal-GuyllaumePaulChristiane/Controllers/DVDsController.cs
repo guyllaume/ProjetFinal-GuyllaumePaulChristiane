@@ -260,30 +260,28 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                     ModelState.AddModelError(dVD.TitreFrancais, "Le titre existe déjà.");
                     return View();
                 }
-
-                
                     
-                    if (imagePochette != null && imagePochette.Length > 0)
+                if (imagePochette != null && imagePochette.Length > 0)
+                {
+                   
+                    var image = imagePochette;
+                    var extension = Path.GetExtension(image.FileName);
+                    var uniqueFileName = Guid.NewGuid().ToString() + "-" + dVD.TitreFrancais + extension;
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ImagePochette");
+                
+                    if (!Directory.Exists(uploadsFolder))
                     {
-                       
-                        var image = imagePochette;
-                        var extension = Path.GetExtension(image.FileName);
-                        var uniqueFileName = Guid.NewGuid().ToString() + "-" + dVD.TitreFrancais + extension;
-                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ImagePochette");
-
-                        if (!Directory.Exists(uploadsFolder))
-                        {
-                            Directory.CreateDirectory(uploadsFolder);
-                        }
-                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await image.CopyToAsync(fileStream);
-                        }
-                        dVD.ImagePochette = Path.Combine("/wwwroot/ImagePochette", uniqueFileName);
-                       
+                        Directory.CreateDirectory(uploadsFolder);
                     }
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(fileStream);
+                    }
+                    dVD.ImagePochette = Path.Combine("\\wwwroot\\ImagePochette", uniqueFileName);
+                    Console.WriteLine(dVD.ImagePochette);
+                }
                   
 
                 dVD.DerniereMiseAJour = DateTime.Now;
