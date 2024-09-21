@@ -397,7 +397,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 return View("Import");
             }
         }
-
+        /*
         // méthode pour l'appropriation d'un DVD
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -418,6 +418,48 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             await _context.SaveChangesAsync();
 
             // logique pour envoyer un email
+
+            return RedirectToAction(nameof(Index));
+        }
+        */
+
+        // GET: DVDs/AppropriationConfirmation/5
+        [HttpGet]
+        public async Task<IActionResult> AppropriationConfirmation(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var dvd = await _context.DVDs
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (dvd == null)
+            {
+                return NotFound();
+            }
+
+            return View(dvd);
+        }
+
+        // POST: DVDs/Appropriation/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Appropriation(int id)
+        {
+            var dvd = await _context.DVDs.FindAsync(id);
+            if (dvd == null)
+            {
+                return NotFound();
+            }
+
+            dvd.UtilisateurProprietaire = User.Identity.Name;
+            dvd.UtilisateurEmprunteur = User.Identity.Name;
+            dvd.DerniereMiseAJour = DateTime.Now;
+            dvd.DerniereMiseAJourPar = User.Identity.Name;
+
+            _context.Update(dvd);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

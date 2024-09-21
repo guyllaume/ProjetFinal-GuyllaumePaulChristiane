@@ -84,9 +84,7 @@
             }else{
                 <a asp-action="Details" asp-route-id="@item.Id">Détails</a> 
                 <a asp-action="Contact" asp-route-id="@item.Id">Contacter</a>
-                            <form asp-action="Appropriation" asp-route-id="@item.Id" method="post" id="appropriationForm_@item.Id">
-                                <button type="button" class="btn btn-primary" onclick="confirmAppropriation(@item.Id)">S'approprier le DVD</button>
-                            </form>
+                <a asp-action="AppropriationConfirmation" asp-route-id="@item.Id" class="btn btn-primary">S'approprier le DVD</a>
             }
         </td>
     </tr>
@@ -94,12 +92,4 @@
 }
     </tbody>
 </table>
-@section Scripts {
-    <script>
-        function confirmAppropriation(id) {
-            if (confirm("Êtes-vous sûr de vouloir vous approprier ce DVD ?")) {
-                document.getElementById('appropriationForm_' + id).submit();
-            }
-        }
-    </script>
-}
+
