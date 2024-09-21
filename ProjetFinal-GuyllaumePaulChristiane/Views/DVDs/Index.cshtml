@@ -88,7 +88,7 @@
             }else{
                 <a asp-action="Details" asp-route-id="@item.Id">Détails</a> 
                 <a asp-action="Contact" asp-route-id="@item.Id" asp-route-username="@item.UtilisateurEmprunteur">Contacter</a> 
-                <a asp-action="Appropriation" asp-route-id="@item.Id">Appropriation</a>
+                <a asp-action="AppropriationConfirmation" asp-route-id="@item.Id" class="btn btn-primary">S'approprier le DVD</a>
             }
         </td>
     </tr>
