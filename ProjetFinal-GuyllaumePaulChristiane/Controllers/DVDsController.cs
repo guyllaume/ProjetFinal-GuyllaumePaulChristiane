@@ -427,5 +427,19 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: DVDs/Contact/5 id optionnel si contact général
+        public async Task<IActionResult> Contact(int? id, string? username)
+        {
+            if (id == null)
+            {
+                return View("Contact");
+            }
+            var dvd = await _context.DVDs.FindAsync(id);
+            if (dvd == null)
+            {
+                return NotFound();
+            }
+            return View("Contact", dvd);
+        }
     }
 }
