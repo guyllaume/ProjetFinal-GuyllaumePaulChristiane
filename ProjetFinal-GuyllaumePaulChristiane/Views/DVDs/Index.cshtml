@@ -4,7 +4,7 @@
 @using ProjetFinal_GuyllaumePaulChristiane.Enums
 
 
-@inject UserManager<IdentityUser> UserManager
+@inject UserManager<User> UserManager
 
 
 @{
@@ -31,15 +31,19 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-<form asp-action="Index" asp-controller="DVDs" method="get">
+<form id="optionAffichage" asp-action="Index" asp-controller="DVDs" method="get">
     <label>
         <input type="checkbox" name="sortedBy" value="Titre" onchange="this.form.submit()" @(IsChecked("Titre") ? "checked" : "") /> Tri par Titre Francais
     </label>
     <label>
         <input type="checkbox" name="sortedBy" value="User" onchange="this.form.submit()" @(IsChecked("User") ? "checked" : "") /> Tri par Emprunteur
     </label>
-    <input type="text" name="recherche"/>
-    <img src="../Data/Image/loupe.png" onclick="this.form.submit()"/>
+    <input type="text" name="recherche" id="recherche"/>
+    <img src="image/loupe.png" id="loupeImg" />
+    @if (Model.isResearched)
+    {
+        <button type="button" onclick="effacerRecherche()">Retour</button>
+    }
     <label for="pageNoParam">Page</label>
     <select name="pageNoParam" onchange="this.form.submit()">
         @for (int i = 1; i <= Model.TotalPages; i++)
@@ -83,7 +87,7 @@
                 <a asp-action="Delete" asp-route-id="@item.Id">Supprimer</a>
             }else{
                 <a asp-action="Details" asp-route-id="@item.Id">Détails</a> 
-                <a asp-action="Contact" asp-route-id="@item.Id">Contacter</a>
+                <a asp-action="Contact" asp-route-id="@item.Id" asp-route-username="@item.UtilisateurEmprunteur">Contacter</a> 
                 <a asp-action="AppropriationConfirmation" asp-route-id="@item.Id">S'approprier le DVD</a>
             }
         </td>
@@ -93,3 +97,12 @@
     </tbody>
 </table>
 
+<script>
+    document.getElementById("loupeImg").addEventListener("click", () => {
+        document.getElementById('optionAffichage').submit();
+    })
+    function effacerRecherche() {
+        document.getElementById('recherche').value = '';
+        document.getElementById('optionAffichage').submit();
+    }
+</script>

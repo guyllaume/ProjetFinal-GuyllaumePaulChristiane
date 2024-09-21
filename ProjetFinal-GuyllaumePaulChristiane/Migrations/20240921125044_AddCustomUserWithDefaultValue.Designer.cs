@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetFinal_GuyllaumePaulChristiane.Data;
 
@@ -11,9 +12,11 @@ using ProjetFinal_GuyllaumePaulChristiane.Data;
 namespace ProjetFinal_GuyllaumePaulChristiane.Migrations
 {
     [DbContext(typeof(ProjetFinal_GPC_DBContext))]
-    partial class ProjetFinal_GPC_DBContextModelSnapshot : ModelSnapshot
+    [Migration("20240921125044_AddCustomUserWithDefaultValue")]
+    partial class AddCustomUserWithDefaultValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
