@@ -38,13 +38,16 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="DVDs" asp-action="IndexConnectedUser">DVDs En Main</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="DVDs" asp-action="IndexSelectUser">DVDs d'un autre utilisateur</a>
-                            </li>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="DVDs" asp-action="IndexSelectUser">DVDs d'un autre utilisateur</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="DVDs" asp-action="Import">Importation</a>
-                        </li>
+                         </li>
+                         <li class="nav-item">
+                             <a class="nav-link text-dark" asp-area="" asp-controller="DVDs" asp-action="Contact">Contacter</a>
+                         </li>
                         <li class="nav-item">
                             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                                 <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>

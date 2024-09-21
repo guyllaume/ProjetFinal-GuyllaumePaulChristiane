@@ -1,8 +1,55 @@
-﻿
+﻿@model ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs.ContactViewModel
 @{
     ViewData["Title"] = "Contact";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Contact</h1>
+
+<p>Formulaire de contact</p>
+
+@if (Model.StatusMessage != null)
+{
+    <span style="color:@(Model.StatusMessage.Contains("Error") ? "red" : "green")">@Model.StatusMessage</span>
+}
+<form asp-action="SendEmail" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label for="email">Votre Email</label>
+        <input type="email" class="form-control" name="email" id="email" value="@User.Identity.Name" readonly>
+    </div>
+    @if (Model.dvd != null)
+    {
+        <div class="form-group">
+            <label asp-for="@Model.username">Email à contacter</label>
+            <input asp-for="@Model.username" type="email" class="form-control" value="@Model.username" readonly>
+        </div>
+        <input type="hidden" asp-for="@Model.dvdId" value="@Model.dvd.Id" />
+    }else
+    {
+        <div id="emailList">
+            <label asp-for="@Model.userAContacter">Email à contacter</label>
+                <select multiple class="form-control" asp-for="@Model.userAContacter" id="emailSelect" size="@(Model.userContactable.Count > 8 ? 8 : Model.userContactable.Count+1)">
+                    <option value="all">All Users</option>
+                    @foreach (var email in Model.userContactable)
+                    {
+                        <option value="@email">@email</option>
+                    }
+            </select>
+            @for (int i = 0; i < Model.userContactable.Count; i++)
+            {
+                <input type="hidden" asp-for="@Model.userContactable[i]" />
+            }
+        </div>
+    }
+    <div class="form-group">
+        <label asp-for="sujet">Sujet</label>
+        <input asp-for="sujet" class="form-control" placeholder="Entrez votre sujet" />
+    </div>
+    <div class="form-group">
+        <label asp-for="message">Message</label>
+        <textarea asp-for="message" class="form-control" placeholder="Entrez votre message" rows="5"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+</form>
 

@@ -20,6 +20,7 @@ using ProjetFinal_GuyllaumePaulChristiane.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs;
+using ProjetFinal_GuyllaumePaulChristiane.Tasks;
 
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
@@ -470,19 +471,63 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: DVDs/Contact/5 id optionnel si contact général
-        public async Task<IActionResult> Contact(int? id, string? username)
+        // GET: DVDs/Contact/5&youremail@email.com id et username optionnel si contact général
+        public async Task<IActionResult> Contact(int? id, string? username, string? statusMessage)
         {
-            if (id == null)
+            if (id == null || username == null)
             {
-                return View("Contact");
+                var usersToContact = await _userManager.Users.ToListAsync();
+                if (usersToContact == null)
+                {
+                    return NotFound();
+                }
+                var emailsToContact = usersToContact.Select(u => u.Email).ToList();
+                var modelWithoutDVD = new ContactViewModel { dvd = null, username = null, userAContacter = new List<string>(), userContactable = emailsToContact };
+                return View("Contact", modelWithoutDVD);
             }
             var dvd = await _context.DVDs.FindAsync(id);
             if (dvd == null)
             {
                 return NotFound();
             }
-            return View("Contact", dvd);
+            Console.WriteLine(dvd.TitreFrancais);
+            var model = new ContactViewModel { dvd = dvd, username = username, userAContacter = new List<string>(), userContactable = null };
+            if (statusMessage != null)
+            {
+                model.StatusMessage = statusMessage;
+            }
+            return View("Contact",model);
+        }
+        // POST: DVDs/Contact/
+        public async Task<IActionResult> SendEmail(ContactViewModel model)
+        {
+            if (!ModelState.IsValid || model.sujet == null || model.message == null || (model.username == null && model.userAContacter == null))
+            {
+                if(model.dvdId == null)
+                    return RedirectToAction("Contact", new { statusMessage = "Error : Veuillez renseigner tous les champs." });
+                return RedirectToAction("Contact", new { id = model.dvdId, model.username, statusMessage = "Error : Veuillez renseigner tous les champs." });
+            }
+            var emailSender = new EmailSender();
+            var dvd = _context.DVDs.Find(model.dvdId);
+
+            if (dvd == null)
+            {
+                if (model.userAContacter.Contains("all"))
+                {
+                    model.userAContacter = model.userContactable;
+                }
+                await emailSender.SendEmailAsync(User.Identity.Name, model.userAContacter, model.sujet, model.message);
+                model.userAContacter = new List<string>();
+            }
+            else
+            {
+                model.dvd = dvd;
+                await emailSender.SendEmailAsync(User.Identity.Name, model.username, model.sujet, model.message, dvd);
+            }
+            Console.WriteLine(model.userAContacter);
+            Console.WriteLine(model.userContactable);
+            model.StatusMessage = "Votre message a été envoyé avec succès.";
+            return View("Contact", model);
         }
     }
 }
