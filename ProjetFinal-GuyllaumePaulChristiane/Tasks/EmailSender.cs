@@ -4,6 +4,7 @@ using MailKit.Net.Smtp;
 using ProjetFinal_GuyllaumePaulChristiane.Models;
 using Azure.Core;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Microsoft.AspNetCore.Identity;
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Tasks
 {
@@ -66,6 +67,33 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Tasks
             }
             message.Subject = subject;
             message.Body = new TextPart("html") { Text = htmlMessage };
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_smtpServer, _smtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_smtpUser, _smtpPass);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        public async Task notifyDVD(List<string> emailReceivers, string sujet, DVD dvd)
+        {
+            // Build your HTML message with DVD details
+            var dvdDetails = $"<h1>{sujet} dans notre catalogue</h1>" +
+                             $"<h2>DVD Details</h2>" +
+                             $"<p><strong>Titre Francais:</strong> {dvd.TitreFrancais}</p>" +
+                             $"<p><strong>Titre Original:</strong>  {dvd.TitreOriginal}</p>" +
+                             $"<p><strong>Année de sortie:</strong>  {dvd.AnneeSortie}</p>" +
+                             $"<p><strong>Résumé:</strong>  {dvd.ResumeFilm}</p>";
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("", _smtpUser));
+            foreach (var receiver in emailReceivers)
+            {
+                message.To.Add(new MailboxAddress("", receiver));
+            }
+            message.Subject = sujet;
+            message.Body = new TextPart("html") { Text = dvdDetails };
 
             using (var client = new SmtpClient())
             {

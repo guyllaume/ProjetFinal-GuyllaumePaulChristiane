@@ -30,11 +30,13 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
     {
         private readonly ProjetFinal_GPC_DBContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly EmailSender _emailSender;
 
-        public DVDsController(ProjetFinal_GPC_DBContext context, UserManager<User> userManager)
+        public DVDsController(ProjetFinal_GPC_DBContext context, UserManager<User> userManager, EmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         // Méthode helper pour obtenir la liste des catégories
@@ -246,9 +248,17 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 dVD.DerniereMiseAJourPar = User.Identity.Name;
                 _context.Add(dVD);
                 await _context.SaveChangesAsync();
+
+                //Envoie de courriel
+                var userToNotify = await _userManager.Users.Where(u => u.courrielOnDVDCreate).Select(u => u.Email).ToListAsync();
+                if ( userToNotify != null && userToNotify.Count > 0 )
+                {
+                    await _emailSender.notifyDVD(userToNotify, "Un Nouveau DVD est disponible", dVD);
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Categories = GetCategoriesList();
+
             return View(dVD);
         }
 
@@ -304,6 +314,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Categories = GetCategoriesList();
+
             return View(dVD);
         }
 
@@ -334,9 +345,16 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             if (dVD != null)
             {
                 _context.DVDs.Remove(dVD);
+                //Envoie de courriel
+                var userToNotify = await _userManager.Users.Where(u => u.courrielOnDVDDelete).Select(u => u.Email).ToListAsync();
+                if (userToNotify != null && userToNotify.Count > 0)
+                {
+                    await _emailSender.notifyDVD(userToNotify, "Un DVD n'est plus disponible", dVD);
+                }
             }
 
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -468,6 +486,13 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             _context.Update(dvd);
             await _context.SaveChangesAsync();
 
+            //Envoie de courriel
+            var userToNotify = await _userManager.Users.Where(u => u.courrielOnAppropriation).Select(u => u.Email).ToListAsync();
+            if (userToNotify != null && userToNotify.Count > 0)
+            {
+                await _emailSender.notifyDVD(userToNotify, "Un DVD a été attribuer a " + dvd.UtilisateurEmprunteur, dvd);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -507,7 +532,6 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                     return RedirectToAction("Contact", new { statusMessage = "Error : Veuillez renseigner tous les champs." });
                 return RedirectToAction("Contact", new { id = model.dvdId, model.username, statusMessage = "Error : Veuillez renseigner tous les champs." });
             }
-            var emailSender = new EmailSender();
             var dvd = _context.DVDs.Find(model.dvdId);
 
             if (dvd == null)
@@ -516,16 +540,14 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 {
                     model.userAContacter = model.userContactable;
                 }
-                await emailSender.SendEmailAsync(User.Identity.Name, model.userAContacter, model.sujet, model.message);
+                await _emailSender.SendEmailAsync(User.Identity.Name, model.userAContacter, model.sujet, model.message);
                 model.userAContacter = new List<string>();
             }
             else
             {
                 model.dvd = dvd;
-                await emailSender.SendEmailAsync(User.Identity.Name, model.username, model.sujet, model.message, dvd);
+                await _emailSender.SendEmailAsync(User.Identity.Name, model.username, model.sujet, model.message, dvd);
             }
-            Console.WriteLine(model.userAContacter);
-            Console.WriteLine(model.userContactable);
             model.StatusMessage = "Votre message a été envoyé avec succès.";
             return View("Contact", model);
         }

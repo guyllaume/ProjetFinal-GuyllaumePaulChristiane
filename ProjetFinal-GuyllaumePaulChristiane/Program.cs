@@ -24,6 +24,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddScoped<EmailSender>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
