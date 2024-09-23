@@ -87,7 +87,7 @@
             <a asp-action="AppropriationConfirmation" asp-route-id="@Model.Id" class="btn btn-primary">S'approprier le DVD</a>
         </div>
         <div class="col-md-4">
-            <a href="mailto:@Model.UtilisateurEmprunteur" class="btn btn-secondary">Envoyer un email à l'emprunteur</a>
+            <a asp-action="Contact" asp-route-id="@Model.Id" asp-route-username="@Model.UtilisateurEmprunteur" class="btn btn-secondary">Envoyer un email à l'emprunteur</a>
         </div>
     </div>
 }
