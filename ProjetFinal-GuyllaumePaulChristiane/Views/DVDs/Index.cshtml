@@ -42,7 +42,7 @@
     <img src="image/loupe.png" id="loupeImg" />
     @if (Model.isResearched)
     {
-        <button type="button" onclick="effacerRecherche()">Retour</button>
+        <button type="button" class="btn btn-primary" onclick="effacerRecherche()">Retour</button>
     }
     <label for="pageNoParam">Page</label>
     <select name="pageNoParam" onchange="this.form.submit()">
@@ -88,7 +88,7 @@
             }else{
                 <a asp-action="Details" asp-route-id="@item.Id">Détails</a> 
                 <a asp-action="Contact" asp-route-id="@item.Id" asp-route-username="@item.UtilisateurEmprunteur">Contacter</a> 
-                <a asp-action="AppropriationConfirmation" asp-route-id="@item.Id" class="btn btn-primary">S'approprier le DVD</a>
+                <a asp-action="AppropriationConfirmation" asp-route-id="@item.Id">S'approprier le DVD</a>
             }
         </td>
     </tr>

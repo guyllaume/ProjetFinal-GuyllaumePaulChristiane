@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjetFinal_GuyllaumePaulChristiane.Models;
 using System.Diagnostics;
@@ -13,9 +14,14 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
+            return RedirectToAction("Index", "DVDs");
         }
 
         public IActionResult Privacy()

@@ -46,3 +46,14 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+
+.navbar-nav.ml-auto {
+    margin-left: auto !important;
+}
+
+@media (max-width: 575.98px) {
+    .navbar-nav.ml-auto {
+        margin-left: 0 !important;
+    }
+}
