@@ -2,16 +2,20 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+//using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Models
 {
+    //[Index(nameof(TitreFrancais), IsUnique = true)]
     public class DVD
     {
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Le titre français est requis")]
+        //le titre fraçais doit être unique dans la BD
+
         [Display(Name = "Titre français")]
-        
+
         public string? TitreFrancais { get; set; }
 
         [Display(Name = "Titre original")]
@@ -21,14 +25,14 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Models
         [Range(1900, 2100, ErrorMessage = "L'année doit être entre 1900 et 2100")]
         public int? AnneeSortie { get; set; }
 
-        
+
         [Display(Name = "Catégorie")]
         public string? Categorie { get; set; }
         /*
         
         [Display(Name = "Catégorie")]
         public Categorie? Categorie { get; set; }
-        */ 
+        */
 
         [Display(Name = "Dernière mise à jour effectuée le")]
         public DateTime? DerniereMiseAJour { get; set; }
@@ -50,7 +54,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Models
         public string? Format { get; set; }
 
         [Display(Name = "Image de la pochette")]
-        public string? ImagePochette { get; set; } 
+        public string? ImagePochette { get; set; }
 
         [Display(Name = "Langue")]
         public string? Langue { get; set; }
@@ -87,4 +91,12 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Models
         public bool VisibleATous { get; set; }
 
     }
+
+    //public class DVDConfiguration : IEntityTypeConfiguration<DVD>
+   // {
+        //public void Configure(EntityTypeBuilder<DVD> builder)
+       // {
+     //       builder.HasIndex(d => d.TitreFrancais).IsUnique();
+       // }
+   // }
 }

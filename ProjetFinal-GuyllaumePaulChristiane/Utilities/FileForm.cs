@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System.Drawing.Imaging;
+using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Utilities
 {
@@ -22,6 +25,46 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Utilities
             };
 
             return file;
+        }
+
+        // Load image from a file path
+        public static byte[] LoadImageFromPath(string imagePath)
+        {
+            using (Image image = Image.FromFile(imagePath))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    image.Save(ms, ImageFormat.Png); // Save as PNG or other format
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        // Convert uploaded IFormFile to byte array
+        public static byte[] ConvertIFormFileToByteArray(IFormFile formFile)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                formFile.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
+        // Compare two byte arrays
+        public static bool CompareImages(byte[] image1, byte[] image2)
+        {
+            if (image1.Length != image2.Length)
+            {
+                return false;
+            }
+            for (int i = 0; i < image1.Length; i++)
+            {
+                if (image1[i] != image2[i])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
     }
