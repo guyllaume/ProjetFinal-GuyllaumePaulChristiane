@@ -23,3 +23,8 @@ body {
 .text-danger{
   color: red;
 }
+
+.imagePochette {
+    width: 150px;
+    height: 200px;
+}

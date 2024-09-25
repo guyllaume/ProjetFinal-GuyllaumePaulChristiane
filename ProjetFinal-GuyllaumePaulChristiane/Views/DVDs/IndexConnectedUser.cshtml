@@ -11,7 +11,6 @@
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Créer un DVD</a>
-    <a asp-action="Import" class="btn btn-secondary">Importation d'exemple de DVDs</a>
 </p>
 @if (TempData["Message"] != null)
 {
@@ -21,7 +20,7 @@
     </div>
 }
 
-<form asp-action="IndexSelectedUser" asp-controller="DVDs" method="get">
+<form asp-action="IndexConnectedUser" asp-controller="DVDs" method="get">
     <label for="pageNoParam">Page</label>
     <select name="pageNoParam" onchange="this.form.submit()">
         @for (int i = 1; i <= Model.TotalPages; i++)

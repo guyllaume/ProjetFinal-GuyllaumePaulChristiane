@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using ProjetFinal_GuyllaumePaulChristiane.Data;
 using ProjetFinal_GuyllaumePaulChristiane.Tasks;
 using ProjetFinal_GuyllaumePaulChristiane.Models;

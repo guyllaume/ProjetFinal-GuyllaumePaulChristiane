@@ -1,28 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
-using CsvHelper.Configuration;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjetFinal_GuyllaumePaulChristiane.Data;
 using ProjetFinal_GuyllaumePaulChristiane.Models;
-using CsvHelper;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.Drawing.Printing;
 using ProjetFinal_GuyllaumePaulChristiane.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs;
 using ProjetFinal_GuyllaumePaulChristiane.Tasks;
-using ProjetFinal_GuyllaumePaulChristiane.Utilities;
 
 
 namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
@@ -61,7 +48,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
         {
             //Initial values
             int pageNo = pageNoParam ?? 1;
-            int moviesPerPages = 12; //Needs to be selected with Personalisation
+            int moviesPerPages = _userManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.nbDVDParPage).FirstOrDefault(); //Needs to be selected with Personalisation
 
             //Collection en Query for dynamic sorting
             var query = _context.DVDs.AsQueryable();
@@ -78,17 +65,18 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
             {
                 // Apply dynamic sorting
                 bool isFirstSort = true;
-                foreach (string sortOption in sortedBy) //for each sorting options selected, add it the OrderBy Clause
+                
+                // Always sort by "User" first if it's in the sortedBy list
+                if (sortedBy.Contains("User"))
                 {
-                    switch (sortOption)
-                    {
-                        case "Titre":
-                            query = isFirstSort ? query.OrderBy(d => d.TitreFrancais) : ((IOrderedQueryable<DVD>)query).ThenBy(d => d.TitreFrancais); //either normal OrderBy or add it to already existing order by
-                            break;
-                        case "User":
-                            query = isFirstSort ? query.OrderBy(d => d.UtilisateurEmprunteur) : ((IOrderedQueryable<DVD>)query).ThenBy(d => d.UtilisateurEmprunteur);
-                            break;
-                    }
+                    query = isFirstSort ? query.OrderBy(d => d.UtilisateurEmprunteur) : ((IOrderedQueryable<DVD>)query).ThenBy(d => d.UtilisateurEmprunteur);
+                    isFirstSort = false;
+                }
+
+                // Then sort by "Titre" if it's in the sortedBy list
+                if (sortedBy.Contains("Titre"))
+                {
+                    query = isFirstSort ? query.OrderBy(d => d.TitreFrancais) : ((IOrderedQueryable<DVD>)query).ThenBy(d => d.TitreFrancais);
                     isFirstSort = false;
                 }
             }
@@ -119,7 +107,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
         {
             //Initial values
             int pageNo = pageNoParam ?? 1;
-            int moviesPerPages = 12; //Needs to be selected with Personalisation
+            int moviesPerPages = _userManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.nbDVDParPage).FirstOrDefault(); //Needs to be selected with Personalisation
 
             //Collection en Query for dynamic sorting
             var query = _context.DVDs.AsQueryable();
@@ -149,7 +137,7 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
         {
             //Initial values
             int pageNo = pageNoParam ?? 1;
-            int moviesPerPages = 12; //Needs to be selected with Personalisation
+            int moviesPerPages = _userManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.nbDVDParPage).FirstOrDefault(); //Needs to be selected with Personalisation
 
             //Collection en Query for dynamic sorting
             var query = _context.DVDs.AsQueryable();
@@ -265,12 +253,10 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
 
                 return View(dVD);
             }
-
+                ModelState.Remove("imagePochette");
             if (ModelState.IsValid)
             {
                 
-
-
                 if (imagePochette != null && imagePochette.Length > 0)
                 {
                    
@@ -294,8 +280,6 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
 
                     
                 }
-
-
                 
                 dVD.DerniereMiseAJour = DateTime.Now;
                 dVD.DerniereMiseAJourPar = User?.Identity?.Name?? string.Empty;
@@ -350,8 +334,6 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
         }
 
         // POST: DVDs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TitreFrancais,TitreOriginal,AnneeSortie,Categorie,DerniereMiseAJour,DerniereMiseAJourPar,DescriptionSupplements,Duree,EstOriginal,Format,Langue,NombreDisques,NomProducteur,NomRealisateur,NomsActeursPrincipaux,ResumeFilm,SousTitres,UtilisateurProprietaire,UtilisateurEmprunteur,VersionEtendue,VisibleATous")] DVD dVD, IFormFile imagePochette)
@@ -387,36 +369,24 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
                 }
                 else
                 {
-                    //var fileName = Path.GetFileName(imagePochette.FileName);
-                   // var filePath2 = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileName); 
-                  //  if (System.IO.File.Exists(filePath2))
-                   // {
-                   //     System.IO.File.Delete(filePath2);
-                  //  }
 
+                    var image = imagePochette;
+                    var extension = Path.GetExtension(image.FileName);
+                    var uniqueFileName = Guid.NewGuid().ToString() + "-" + dVD.TitreFrancais + extension;
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ImagePochette");
 
-                   // if (imagePochette != null && imagePochette.Length > 0)
-                   // {
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                        var image = imagePochette;
-                        var extension = Path.GetExtension(image.FileName);
-                        var uniqueFileName = Guid.NewGuid().ToString() + "-" + dVD.TitreFrancais + extension;
-                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ImagePochette");
-
-                        if (!Directory.Exists(uploadsFolder))
-                        {
-                            Directory.CreateDirectory(uploadsFolder);
-                        }
-                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await image.CopyToAsync(fileStream);
-                        }
-                        dVD.ImagePochette = Path.Combine("\\ImagePochette", uniqueFileName);
-                        Console.WriteLine(dVD.ImagePochette);
-
-                  //  }
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(fileStream);
+                    }
+                    dVD.ImagePochette = Path.Combine("\\ImagePochette", uniqueFileName);
+                    Console.WriteLine(dVD.ImagePochette);
                 }
 
                 try
@@ -429,7 +399,6 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
 
                     _context.Entry(dVDFromDB).CurrentValues.SetValues(dVD);
 
-                    //_context.Update(dVD);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -503,91 +472,6 @@ namespace ProjetFinal_GuyllaumePaulChristiane.Controllers
         {
             return _context.DVDs.Any(e => e.Id == id);
         }
-
-        // méthode pour l'insertion de données DVD détaillées
-        [HttpGet]
-        public IActionResult Import()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ImportPost()
-        {
-            try
-            {
-                Console.WriteLine("Début de la méthode ImportPost");
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "SampleDVDs.csv");
-                Console.WriteLine($"Chemin du fichier CSV : {filePath}");
-
-                if (!System.IO.File.Exists(filePath))
-                {
-                    Console.WriteLine("Le fichier CSV n'a pas été trouvé.");
-                    ModelState.AddModelError("", "Le fichier CSV n'a pas été trouvé.");
-                    return View("Import");
-                }
-
-                int importedCount = 0;
-                using (var reader = new StreamReader(filePath, Encoding.UTF8))
-                using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.GetCultureInfo("fr-CA"))
-                {
-                    Delimiter = ",",
-                    HeaderValidated = null,
-                    MissingFieldFound = null
-                }))
-                {
-                    var records = csv.GetRecords<DVD>().ToList();
-                    Console.WriteLine($"Nombre d'enregistrements lus : {records.Count}");
-                    foreach (var record in records)
-                    {
-                        Console.WriteLine(record.DescriptionSupplements);
-                        record.DerniereMiseAJour = DateTime.Now;
-                        record.DerniereMiseAJourPar = User.Identity.Name;
-                        _context.DVDs.Add(record);
-                        importedCount++;
-                    }
-                    Console.WriteLine($"Nombre d'enregistrements ajoutés : {importedCount}");
-                    await _context.SaveChangesAsync();
-                }
-
-                Console.WriteLine($"Importation terminée. {importedCount} DVDs importés.");
-                TempData["Message"] = $"{importedCount} DVDs ont été importés avec succès.";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erreur lors de l'importation : {ex.Message}");
-                Console.WriteLine($"StackTrace : {ex.StackTrace}");
-                ModelState.AddModelError("", "Une erreur s'est produite lors de l'importation.");
-                return View("Import");
-            }
-        }
-        /*
-        // méthode pour l'appropriation d'un DVD
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Appropriation(int id)
-        {
-            var dvd = await _context.DVDs.FindAsync(id);
-            if (dvd == null)
-            {
-                return NotFound();
-            }
-
-            dvd.UtilisateurProprietaire = User.Identity.Name;
-            dvd.UtilisateurEmprunteur = User.Identity.Name;
-            dvd.DerniereMiseAJour = DateTime.Now;
-            dvd.DerniereMiseAJourPar = User.Identity.Name;
-
-            _context.Update(dvd);
-            await _context.SaveChangesAsync();
-
-            // logique pour envoyer un email
-
-            return RedirectToAction(nameof(Index));
-        }
-        */
 
         // GET: DVDs/AppropriationConfirmation/5
         [HttpGet]

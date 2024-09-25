@@ -8,9 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\ImagePochette\**" />
     <Compile Remove="Data\Image\**" />
+    <Content Remove="Data\ImagePochette\**" />
     <Content Remove="Data\Image\**" />
+    <EmbeddedResource Remove="Data\ImagePochette\**" />
     <EmbeddedResource Remove="Data\Image\**" />
+    <None Remove="Data\ImagePochette\**" />
     <None Remove="Data\Image\**" />
   </ItemGroup>
 
@@ -30,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\ImagePochette\" />
+    <Folder Include="wwwroot\ImagePochette\" />
   </ItemGroup>
 
 </Project>

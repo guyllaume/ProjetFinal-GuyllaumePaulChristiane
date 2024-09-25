@@ -11,7 +11,6 @@
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Créer un DVD</a>
-    <a asp-action="Import" class="btn btn-secondary">Importation d'exemple de DVDs</a>
 </p>
 @if (TempData["Message"] != null)
 {
@@ -20,7 +19,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-<form asp-action="IndexConnectedUser" asp-controller="DVDs" method="get">
+<form asp-action="IndexSelectedUser" asp-controller="DVDs" method="get">
     <label for="pageNoParam">Page</label>
     <select name="pageNoParam" onchange="this.form.submit()">
         @for (int i = 1; i <= Model.TotalPages; i++)
@@ -28,7 +27,7 @@
             <option value="@i" selected="@(i == Model.currentPage)">@i</option>
         }
     </select>
-    <input type="hidden" asp-for="SelectedUserId" value="@Model.SelectedUserId"/>
+    <input type="hidden" name="userId" value="@Model.SelectedUserId"/>
 </form>
 <table class="table">
     <thead>
@@ -52,9 +51,9 @@
             @Html.DisplayFor(modelItem => item.TitreFrancais)
         </td>
         <td>
-            <a asp-action="Details" asp-route-id="@item.Id">Détails</a> 
-            <a asp-action="Contact" asp-route-id="@item.Id">Contacter</a> 
-            <a asp-action="Appropriation" asp-route-id="@item.Id">Appropriation</a>
+            <a asp-action="Details" asp-route-id="@item.Id">Détails</a>
+            <a asp-action="Contact" asp-route-id="@item.Id" asp-route-username="@item.UtilisateurEmprunteur">Contacter</a>
+            <a asp-action="AppropriationConfirmation" asp-route-id="@item.Id">S'approprier le DVD</a>
         </td>
     </tr>
 }

@@ -2,11 +2,11 @@
 
 @{
     ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_LayoutNoLinks.cshtml";
 }
 
 <h2>Create DVD</h2>
 
-@*<h4>DVD</h4>*@
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -104,6 +104,10 @@
             <div class="form-group">
                 <label asp-for="UtilisateurProprietaire" class="control-label"></label>
                 <input asp-for="UtilisateurProprietaire" class="form-control text-info" value="@ViewBag.UserName" readonly="readonly" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UtilisateurEmprunteur" class="control-label"></label>
+                <input asp-for="UtilisateurEmprunteur" class="form-control text-info" value="@ViewBag.UserName" readonly="readonly" />
             </div>
             
             <div class="form-group form-check">

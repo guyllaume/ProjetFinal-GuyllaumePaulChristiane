@@ -1,6 +1,7 @@
 ﻿@model ProjetFinal_GuyllaumePaulChristiane.Models.DVD
 @{
     ViewData["Title"] = "Détails du DVD";
+    Layout = "~/Views/Shared/_LayoutNoLinks.cshtml";
 }
 <h1>Détails du DVD</h1>
 <div>
@@ -41,7 +42,7 @@
         <dd class="col-sm-9">
             @if (!string.IsNullOrEmpty(Model.ImagePochette))
             {
-                <img src="@Url.Content(Model.ImagePochette)" alt="Pochette du DVD" style="max-width: 200px;" />
+                <img class="imagePochette" src="@Url.Content(Model.ImagePochette)" alt="Pochette du DVD" style="max-width: 200px;" />
             }
         </dd>
 

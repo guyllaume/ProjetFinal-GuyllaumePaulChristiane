@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutNoLinks.cshtml";
 }
 
 <h1>Edit</h1>
@@ -59,7 +60,7 @@
                 <label name="imagePochette" class="control-label">Image Pochette</label>
                 <input name="imagePochette" type="file" class="form-control" />
                 <span class="text-danger"></span>
-                <img src="@Model.ImagePochette" />
+                <img class="imagePochette" src="@Model.ImagePochette" />
             </div>
             <div class="form-group">
                 <label asp-for="Langue" class="control-label"></label>

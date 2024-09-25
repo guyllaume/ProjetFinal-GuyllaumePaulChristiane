@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Confirmer l'appropriation";
+    Layout = "~/Views/Shared/_LayoutNoLinks.cshtml";
 }
 
 <h1>Confirmer l'appropriation</h1>
@@ -45,7 +46,7 @@
         <dd class="col-sm-9">
             @if (!string.IsNullOrEmpty(Model.ImagePochette))
             {
-                <img src="@Model.ImagePochette" alt="Pochette du DVD" style="max-width: 200px;" />
+                <img class="imagePochette" src="@Model.ImagePochette" alt="Pochette du DVD" />
             }
         </dd>
 

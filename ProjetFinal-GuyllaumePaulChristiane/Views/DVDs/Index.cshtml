@@ -22,7 +22,6 @@
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Créer un DVD</a>
-    <a asp-action="Import" class="btn btn-secondary">Importation d'exemple de DVDs</a>
 </p>
 @if (TempData["Message"] != null)
 {
@@ -72,7 +71,7 @@
     {
     <tr>
         <td>
-            <img src="@Url.Content(item.ImagePochette)" alt="Image Pochette" />
+            <img class="imagePochette" src="@Url.Content(item.ImagePochette)" alt="Image Pochette" />
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.TitreFrancais)

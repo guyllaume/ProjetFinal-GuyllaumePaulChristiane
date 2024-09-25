@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using ProjetFinal_GuyllaumePaulChristiane.Models;
 
 namespace ProjetFinal_GuyllaumePaulChristiane.ViewModel.DVDs
 {
