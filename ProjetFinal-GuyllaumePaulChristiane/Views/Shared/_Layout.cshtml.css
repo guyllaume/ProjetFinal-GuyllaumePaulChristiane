@@ -57,3 +57,6 @@ button.accept-policy {
         margin-left: 0 !important;
     }
 }
+.text-danger{
+  color: red;
+}

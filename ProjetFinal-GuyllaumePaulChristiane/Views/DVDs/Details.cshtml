@@ -41,7 +41,7 @@
         <dd class="col-sm-9">
             @if (!string.IsNullOrEmpty(Model.ImagePochette))
             {
-                <img src="@Model.ImagePochette" alt="Pochette du DVD" style="max-width: 200px;" />
+                <img src="@Url.Content(Model.ImagePochette)" alt="Pochette du DVD" style="max-width: 200px;" />
             }
         </dd>
 
@@ -67,10 +67,11 @@
         <dd class="col-sm-9">@Html.DisplayFor(model => model.SousTitres)</dd>
 
         <dt class="col-sm-3">@Html.DisplayNameFor(model => model.UtilisateurProprietaire)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.UtilisateurProprietaire)</dd>
+        <dd class="col-sm-9 text-info">@Html.DisplayFor(model => model.UtilisateurProprietaire)</dd>
+        
 
         <dt class="col-sm-3">@Html.DisplayNameFor(model => model.UtilisateurEmprunteur)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.UtilisateurEmprunteur)</dd>
+        <dd class="col-sm-9 text-info">@Html.DisplayFor(model => model.UtilisateurEmprunteur)</dd>
 
         <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VersionEtendue)</dt>
         <dd class="col-sm-9">@Html.DisplayFor(model => model.VersionEtendue)</dd>
